@@ -3,6 +3,14 @@ import { NgModule } from '@angular/core';
 
 //Modulos
 import { AppRoutingModule } from './app-routing.module';
+import { FormsModule } from '@angular/forms'
+
+//Firebase
+import { AngularFireModule } from '@angular/fire';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { AngularFireAuthModule } from '@angular/fire/auth';
+
+import { environment } from 'src/environments/environment';
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './auth/login/login.component';
@@ -16,24 +24,30 @@ import { NavbarComponent } from './shared/navbar/navbar.component';
 import { SidebarComponent } from './shared/sidebar/sidebar.component';
 
 
+
+
 @NgModule({
-  declarations: [
-    AppComponent,
-    LoginComponent,
-    RegisterComponent,
-    DashboardComponent,
-    IngresoEgresoComponent,
-    EstadisticaComponent,
-    DetalleComponent,
-    FooterComponent,
-    NavbarComponent,
-    SidebarComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
+   declarations: [
+      AppComponent,
+      LoginComponent,
+      RegisterComponent,
+      DashboardComponent,
+      IngresoEgresoComponent,
+      EstadisticaComponent,
+      DetalleComponent,
+      FooterComponent,
+      NavbarComponent,
+      SidebarComponent
+   ],
+   imports: [
+      BrowserModule,
+      AppRoutingModule,
+      FormsModule,
+      AngularFireModule.initializeApp(environment.firebase), 
+      AngularFirestoreModule,
+      AngularFireAuthModule
+   ],
+   providers: [],
+   bootstrap: [AppComponent]
 })
 export class AppModule { }

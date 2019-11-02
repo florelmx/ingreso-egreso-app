@@ -1,15 +1,22 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../auth.service';
 
 @Component({
-  selector: 'app-register',
-  templateUrl: './register.component.html',
-  styles: []
+   selector: 'app-register',
+   templateUrl: './register.component.html',
+   styles: []
 })
 export class RegisterComponent implements OnInit {
 
-  constructor() { }
+   constructor(
+      public authService: AuthService
+   ) { }
 
-  ngOnInit() {
-  }
+   ngOnInit() {
+   }
 
+   onSudmit(data) {
+      console.log(data)
+      this.authService.crearUsuario(data.nombre, data.email, data.password);
+   }
 }
