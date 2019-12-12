@@ -12,7 +12,7 @@ import { User } from './user.model';
 import { Store } from '@ngrx/store';
 import { AppState } from '../app.reducer';
 import { ActivarLoadingAction, DesactivarLoadingAction } from '../shared/ui.accion';
-import { SetUserAction } from './auth.actions';
+import { SetUserAction, UnsetUserAction } from './auth.actions';
 import { Subscription } from 'rxjs';
 
 
@@ -22,7 +22,8 @@ import { Subscription } from 'rxjs';
 })
 export class AuthService {
 
-   private userSubscription : Subscription = new Subscription()
+   private userSubscription: Subscription = new Subscription()
+   private usuario: User;
 
    constructor(
       private afAuth: AngularFireAuth,
@@ -38,9 +39,10 @@ export class AuthService {
                .subscribe((usaurioObj: any) => {
                   const newUser = new User(usaurioObj)
                   this.store.dispatch(new SetUserAction(newUser))
-                  console.log(newUser)
+                  this.usuario = newUser
                })
          } else {
+            this.usuario = null
             this.userSubscription.unsubscribe()
          }
       })
@@ -64,13 +66,13 @@ export class AuthService {
                .set(user)
                .then(() => {
                   this.router.navigate(['/'])
-                  this.store.dispatch(new ActivarLoadingAction())
+                  this.store.dispatch(new DesactivarLoadingAction())
                })
 
 
          })
          .catch(error => {
-            this.store.dispatch(new ActivarLoadingAction())
+            this.store.dispatch(new DesactivarLoadingAction())
             console.error(error)
             Swal.fire({ title: 'Error en el login', text: error.message, type: 'error' });
          })
@@ -83,11 +85,11 @@ export class AuthService {
          .then(resp => {
             // console.log(resp)
             this.router.navigate(['/'])
-            this.store.dispatch(new ActivarLoadingAction())
+            this.store.dispatch(new DesactivarLoadingAction())
          })
          .catch(error => {
             // console.error(error);
-            this.store.dispatch(new ActivarLoadingAction())
+            this.store.dispatch(new DesactivarLoadingAction())
             Swal.fire({ title: 'Error en el login', text: error.message, type: 'error' });
          })
    }
@@ -95,6 +97,8 @@ export class AuthService {
    logout() {
       this.router.navigate(['/login']);
       this.afAuth.auth.signOut()
+
+      this.store.dispatch(new UnsetUserAction());
    }
 
    isAuth() {
@@ -106,5 +110,9 @@ export class AuthService {
             return fbUser != null
          })
       )
+   }
+
+   getUsuario() {
+      return { ...this.usuario };
    }
 }
